@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobDescriptionController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SessionController;
@@ -13,6 +14,12 @@ Route::get('/jobs/create', [JobController::class, 'create'])->middleware('auth')
 
 Route::post('/jobs', [JobController::class, 'store'])->middleware('auth');
 
+
+Route::get('/description/create/{job}', [JobController::class, 'describe']);
+Route::patch('/description/create/{job}', [JobController::class, 'storeDescription']);
+// ->middleware('auth')
+
+Route::get('/description/index/{job}', [JobController::class, 'show']);
 
 Route::get('/tags/{tag:name}', TagController::class);
 

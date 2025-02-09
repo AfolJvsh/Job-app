@@ -14,8 +14,9 @@
 
 <x-form.checkbox label="Feature (Costs Extra" name="featured"/>
 
-        <x-form.input label="URL" name="url" placeholder=""/>
+        <!-- <x-form.input label="URL" name="url" placeholder=""/> -->
         <x-form.input label="Tags (comma separated)" name="tags" placeholder="video, education, sports"/>
         <x-form.button>Publish</x-form.button>
+        <a href="" >Continue</a>
     </x-form.form>
 </x-layout>

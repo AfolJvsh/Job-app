@@ -10,7 +10,7 @@
     <div class="px-10">
         <nav class="flex justify-between items-center py-4 border-b border-white/10">
             <div>
-            <a href="" style="flex-direction:row; display:flex ">
+            <a href="/" style="flex-direction:row; display:flex ">
                 <img class="w-8 h-8 bg-white inline-block mr-1" src="{{Vite::asset('resources/images/aj.jpeg')}}" alt=""/>
                 <span class="inline-block flex flex-col mt-0.5">
                  <span class="text-xs font-bold h-2">PIXEL</span>
@@ -19,10 +19,10 @@
             </a>
         </div>
         <div class="space-x-6 font-bold">
-            <a href="">Jobs</a>
-            <a href="">Careers</a>
-            <a href="">Salaries</a>
-            <a href="">Companies</a>
+            <a href="/">Jobs</a>
+            <a href="/">Careers</a>
+            <a href="/">Salaries</a>
+            <a href="/">Companies</a>
         </div>
         @auth
         <div class="flex space-x-6">
@@ -32,13 +32,16 @@
             @method('DELETE')
            <button>logout</button>
           </form>
+          </div>
             @endauth
 
             @guest
+            <div class="flex space-x-6">
             <a href="/register">Sign Up</a>
             <a href="/login">Log in</a>
+            </div>
             @endguest
-        </div>
+        
         </nav>
         <main class="mt-10 max-w-[986px] mx-auto">
             {{$slot}}
