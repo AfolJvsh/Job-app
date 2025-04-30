@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Job;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -26,6 +27,10 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
+            'company_name' => fake()->company(),
+           'logo' => fake()->imageUrl(),
+           'role' =>fake()->randomelement(['applicant', 'employer']),
+           'resume'=> fake()->url,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Applicants;
+use App\Models\Applications;
 use App\Models\Job;
 use App\Models\Description;
 use App\Models\Tag;
@@ -16,12 +18,13 @@ class JobSeeder extends Seeder
     public function run(): void
     {
         $tags = Tag::factory(3)->create();
-
-        Job::factory(20)
+      Job::factory(20)
+             ->has( Applications::factory(3))
             ->hasAttached($tags)
             ->create(new Sequence(
                 ['featured' => false, 'schedule' => 'Full Time'],
                 ['featured' => true, 'schedule' => 'Part Time']
             ));
+
     }
 }

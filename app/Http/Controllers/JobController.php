@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Job;
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -17,14 +19,27 @@ class JobController extends Controller
      */
     public function index()
     {
-        $jobs= Job::latest()->with(['employer', 'tags'])->get()->groupBy('featured');
-        return view ('jobs.index',
-  [
-      'jobs'=> $jobs[0],
-        'featuredJobs'=> $jobs[1],
-        'tags' => Tag::all()
-        ]
-    );
+        $user = Auth::user();
+        $jobs= Job::latest()->with([ 'tags'])->get()->groupBy('featured');
+        if($user === null){
+
+            return view ('auth.login');
+        }
+        
+        if($user-> role === null){
+            return view('jobs.index2', ['user'=>$user]);
+        }
+
+
+        else{
+            return view ('jobs.index',
+      [
+          'jobs'=> $jobs[0],
+            'featuredJobs'=> $jobs[1],
+            'tags' => Tag::all(),
+            'user'=>$user
+            ] );
+        }
     }
 
     /**
@@ -38,23 +53,25 @@ class JobController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Job $job)
     {
+        $user= Auth::id();
+        $id = User::where('id', $user)->first();
         $attributes = $request->validate([
             'title' => ['required'],
             'salary' => ['required'],
             'location' => ['required'],
             'schedule' => ['required', Rule::in(['part Time', 'Full Time'])],
-            // 'url' => ['required', 'active_url'],
             'tags' => ['nullable'],
         ]);
         $attributes['featured'] = $request->has('featured');
-        $job = Auth::user()->employer->jobs()->create(array_merge(
+        $job = $id->jobs()->create(array_merge(
             Arr::except($attributes, 'tags'),
         [
             'job_overview'=>'to be updated',
             'responsibilities' => 'to be updated',
             'qualifications' =>'to be updated',
+            'compensations' =>'to be updated',
             'how_to_apply' => 'to be updated']
     ));
 
@@ -64,7 +81,7 @@ class JobController extends Controller
                 $job->tag($tag);
             }
         }
-        return redirect('/description/create/'. $job->id);
+        return redirect('/description/create/'. $job->id)->with('success', 'Job description created successfully!');
     }
     public function show(Job $job){
         return view('description.index', ['job'=>$job]);
@@ -78,6 +95,7 @@ class JobController extends Controller
             'job_overview'=>['required'],
             'responsibilities' => ['required'],
             'qualifications' => ['required'],
+            'compensations' => ['required'],
             'how_to_apply' =>['required']
         ]);
 
@@ -85,8 +103,9 @@ class JobController extends Controller
             'job_overview'=> request('job_overview'),
             'responsibilities' => request('responsibilities'),
             'qualifications' => request('qualifications'),
+            'compensations' => request('compensations'),
             'how_to_apply' =>request('how_to_apply')
         ]);
-        return redirect ('/description/index/'. $job->id);
+        return redirect ('/description/'. $job->id)->with('success', 'Job description updated successfully!');
     }
 }
